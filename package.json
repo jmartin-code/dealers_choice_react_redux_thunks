@@ -1,0 +1,12 @@
+{
+  "name": "dealers_choice_react_redux_thunks",
+  "version": "1.0.0",
+  "description": "- Use express, pg, sequelize for backend.\r - Use react, redux, react-redux, redux-thunk, axios and whatever other libraries for front end.\r - Allow user to modify backend database via post, delete, and put requests.\r - Faker library to generate data (instead of using forms) for testing/development mode.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
