@@ -20,3 +20,4 @@ app.listen(port, () => console.log(`server running on port ${port}`));
 
 
 const { Sequelize, STRING } = require('sequelize');
+const db = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:fullstack25@localhost/ecb_violations');
