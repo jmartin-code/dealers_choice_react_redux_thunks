@@ -11,20 +11,29 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 app.get('/', (req, res, next) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
 
 
-app.get('/api/violations', async (req, res, next) => {
-
-})
+app.get('/api/buildings', async (req, res, next) => {
+    res.send(await Building.findAll(
+        { include: Violation }
+    ))
+});
 
 
 const { Sequelize, STRING } = require('sequelize');
-const db = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:fullstack25@localhost/ecb_violations');
+const db = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:fullstack25@localhost/ecb_violations', { logging: false });
 
 //Models
-const Building = db.define('building', {
-    bin: {
+const Tracker = db.define('tracker', {
+    buildingId: {
         type: STRING,
+        unique: true
     }
+})
 
+const Building = db.define('building', {
+    identifier: {
+        type: STRING,
+        unique: true
+    }
 })
 
 const Violation = db.define('violation', {
@@ -58,9 +67,11 @@ const Violation = db.define('violation', {
     certification_status: STRING
 });
 
+
 //Associations
-Violation.belongsTo(Building);
-Building.hasMany(Violation);
+Building.hasMany(Violation, { sourceKey: 'identifier', foreignKey: 'bin' });
+Violation.belongsTo(Building, { targetKey: 'identifier', foreignKey: 'bin' });
+
 
 const syncAndSeed = async () => {
     try {
@@ -68,8 +79,9 @@ const syncAndSeed = async () => {
         await db.sync({ force: true })
         console.log('Connected to database');
 
-        await Building.create({ bin: "1014398" });
-        await Promise.all(data.map(violation => Violation.create(violation)));
+        const buildingId = [...new Set(data.map(id => id['bin']))]; //Get unique building id from the violations data.
+        await Promise.all(buildingId.map(id => Building.create({ identifier: id })));//Create all buildings using unique building id.
+        await Promise.all(data.map(violation => Violation.create(violation))); //Create all violatioins
     }
     catch (err) {
         console.log(err);
@@ -90,3 +102,5 @@ const runServer = async () => {
 runServer();
 
 
+// 1037166
+// 1088591
