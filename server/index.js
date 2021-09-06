@@ -79,6 +79,8 @@ const syncAndSeed = async () => {
         await db.sync({ force: true })
         console.log('Connected to database');
 
+        await Tracker.create({ buildingId: "1037166" })
+
         const buildingId = [...new Set(data.map(id => id['bin']))]; //Get unique building id from the violations data.
         await Promise.all(buildingId.map(id => Building.create({ identifier: id })));//Create all buildings using unique building id.
         await Promise.all(data.map(violation => Violation.create(violation))); //Create all violatioins

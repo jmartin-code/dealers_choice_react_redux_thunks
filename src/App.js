@@ -6,8 +6,11 @@ class App extends Component {
         console.log(e.target.value)
     }
 
-    render() {
+    componentDidMount() {
 
+    }
+
+    render() {
         return (
             <div>
                 <nav>
@@ -32,7 +35,9 @@ class App extends Component {
 
                 <main>
                     <div className="container">
+                        <div className='building-card'>
 
+                        </div>
                     </div>
                 </main>
             </div>
