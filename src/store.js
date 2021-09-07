@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import axios from 'axios';
+import logger from 'redux-logger';
 
 //Action Type
 const LOAD_TODO = 'LOAD_TODO';
@@ -9,35 +10,8 @@ const UPDATE_TODO = 'UPDATE_TODO';
 const DELETE_TODO = 'DELETE_TODO';
 const SET_VIEW = 'SET_VIEW';
 
-//Reducers
-const todoReducer = (state = [], action) => {
-    if (action.type === LOAD_TODO) {
-        state = action.todos.sort((a, b) => a.id - b.id);
-    }
 
-    if (action.type === ADD_TODO) {
-        state = [...state, action.addtodo].sort((a, b) => a.id - b.id);
-    }
-
-    if (action.type === UPDATE_TODO) {
-        state = [...state.filter(todo => todo.id !== action.updatetodo.id), action.updatetodo].sort((a, b) => a.id - b.id);
-    }
-
-    if (action.type === DELETE_TODO) {
-        state = state.filter(todo => todo.id !== action.deletedtodo.id).sort((a, b) => a.id - b.id);
-    }
-
-    return state;
-}
-
-const viewReducer = (state = 'SHOW_ALL', action) => {
-    if (action.type === SET_VIEW) {
-        state = action.view;
-    }
-    return state
-}
-
-
+//Action creators
 export const fetchTodos = () => {
     return async (dispatch) => {
         const todos = (await axios.get('/api/todos')).data; //Fetch todos
@@ -86,8 +60,36 @@ export const setView = (view) => {
     }
 }
 
+//Reducers
+const todoReducer = (state = [], action) => {
+    if (action.type === LOAD_TODO) {
+        state = action.todos.sort((a, b) => a.id - b.id);
+    }
+
+    if (action.type === ADD_TODO) {
+        state = [...state, action.addtodo].sort((a, b) => a.id - b.id);
+    }
+
+    if (action.type === UPDATE_TODO) {
+        state = [...state.filter(todo => todo.id !== action.updatetodo.id), action.updatetodo].sort((a, b) => a.id - b.id);
+    }
+
+    if (action.type === DELETE_TODO) {
+        state = state.filter(todo => todo.id !== action.deletedtodo.id).sort((a, b) => a.id - b.id);
+    }
+
+    return state;
+}
+
+const viewReducer = (state = 'SHOW_ALL', action) => {
+    if (action.type === SET_VIEW) {
+        state = action.view;
+    }
+    return state
+}
+
 //Combining reducers and create store.
 const reducer = combineReducers({ todos: todoReducer, view: viewReducer })
-const store = createStore(reducer, applyMiddleware(thunk));
+const store = createStore(reducer, applyMiddleware(thunk, logger));
 
 export default store;
