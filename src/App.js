@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
+import { loadBuilding } from './store';
+import store from './store'
+
 class App extends Component {
     handleChange(e) {
         console.log(e.target.value)
     }
 
     componentDidMount() {
-
+        this.props.loadBuilding();
     }
 
     render() {
+        // console.log(this.props)
+        const { tracker } = this.props;
+        console.log(tracker)
         return (
             <div>
                 <nav>
@@ -36,7 +42,8 @@ class App extends Component {
                 <main>
                     <div className="container">
                         <div className='building-card'>
-
+                            <h1>hello</h1>
+                            <h1>{tracker.length}</h1>
                         </div>
                     </div>
                 </main>
@@ -45,4 +52,16 @@ class App extends Component {
     }
 }
 
-export default connect()(App)
+const mapState = (state) => {
+    return state;
+}
+
+const mapDispatch = (dispatch) => {
+    return {
+        loadBuilding: () => {
+            return dispatch(loadBuilding())
+        }
+    }
+}
+
+export default connect(mapState, mapDispatch)(App)

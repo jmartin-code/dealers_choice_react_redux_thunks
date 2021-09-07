@@ -11,10 +11,13 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 app.get('/', (req, res, next) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
 
 
+// app.get('/api/buildings', async (req, res, next) => {
+//     res.send(await Building.findAll(
+//         { include: Violation }
+//     ))
+// });
 app.get('/api/buildings', async (req, res, next) => {
-    res.send(await Building.findAll(
-        { include: Violation }
-    ))
+    res.send(await Tracker.findAll())
 });
 
 
