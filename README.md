@@ -10,4 +10,4 @@
 
 ## Sketch - Rev. 1
 
-![Sketch]()
+![Sketch](Sketch-Rev.1.png)
