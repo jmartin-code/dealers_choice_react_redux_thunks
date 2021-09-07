@@ -88,15 +88,21 @@ class App extends Component {
                         <button type="submit">Add Building</button>
                     </form>
                     <div className="container">
-                        {tracker.map(building => {
+                        {tracker.map(buildings => {
                             return (
-                                <div className='building-card' key={building.id}>
-                                    <h2>BUILDING </h2>
-                                    <p>{building.identifier}</p>
-                                    <h4>{building.violations.respondent_house_number} {building.violations.respondent_street}</h4>
-                                    <h4>{boro(building.violations.boro)}</h4>
-                                    <p>Total Violations = {building.violations.length}</p>
-                                </div>
+                                {
+                                    buildings.map(building => {
+                                        <div className='building-card' key={building.id}>
+                                            return (
+                                            <h2>BUILDING </h2>
+                                            <p>{buildings.identifier}</p>
+                                            <h4>{building.violations.respondent_house_number} {building.violations.respondent_street}</h4>
+                                            <h4>{boro(building.violations.boro)}</h4>
+                                            <p>Total Violations = {building.violations.length}</p>
+                                            )
+                                        </div>
+                                    })
+                                }
                             )
                         })}
                     </div>

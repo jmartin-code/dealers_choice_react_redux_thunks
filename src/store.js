@@ -29,9 +29,10 @@ export const trackingBuilding = () => {
         //Get buildings based on tracking ids
         const response = await Promise.all(tracking.map(track => axios.get(`/api/buildings/${track.buildingId}`)))
         const buildings = response.map(building => building.data);
+        // console.log(buildings)
 
         //Dispatch all buildings
-        buildings.forEach(building => dispatch({ type: LOADTRACKING, buildings: building }))
+        dispatch({ type: LOADTRACKING, buildings: buildings })
     }
 }
 
