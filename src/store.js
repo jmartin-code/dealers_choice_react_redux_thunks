@@ -3,49 +3,36 @@ import thunk from 'redux-thunk';
 import axios from 'axios';
 
 //Action Type
-const LOADTRACKING = 'LOAD_TRACKING';
-const ADDBUILDING = 'ADD_BUILDING';
+const LOAD_TODO = 'LOAD_TODO';
+const ADD_TODO = 'ADD_TODO';
 
 //Reducers
-const trackerReducre = (state = [], action) => {
-    if (action.type === LOADTRACKING) {
-        state = action.buildings;
+const todoReducer = (state = [], action) => {
+    if (action.type === LOAD_TODO) {
+        state = action.todos;
     }
 
-    if (action.type === ADDBUILDING) {
-        state = action.addbuild;
+    if (action.type === ADD_TODO) {
+        state = action.addtodo;
     }
 
     return state;
 }
 
-const reducer = combineReducers({ tracker: trackerReducre })
+const reducer = combineReducers({ todos: todoReducer })
 
-export const trackingBuilding = () => {
+export const fetchTodos = () => {
     return async (dispatch) => {
-        //Tracking ids
-        const tracking = (await axios.get('/api/buildings')).data;
-
-        //Get buildings based on tracking ids
-        const response = await Promise.all(tracking.map(track => axios.get(`/api/buildings/${track.buildingId}`)))
-        const buildings = response.map(building => building.data);
-        // console.log(buildings)
-
-        //Dispatch all buildings
-        dispatch({ type: LOADTRACKING, buildings: buildings })
+        const todos = (await axios.get('/api/todos')).data; //Fetch todos
+        dispatch({ type: LOAD_TODO, todos }); //Dispatch todos
     }
 }
 
-export const addBuilding = (id) => {
+export const addTodo = (todo) => {
     return async (dispatch) => {
         try {
-            const addbuild = (await axios.post('/api/buildings', { id })).data;
-
-            // console.log(added)
-
-            //Dispatch add building
-            dispatch({ type: ADDBUILDING, addbuild })
-
+            const addtodo = (await axios.post('/api/todos', { todo })).data;
+            dispatch({ type: ADD_TODO, addtodo })
         }
         catch (err) {
             console.log(err)

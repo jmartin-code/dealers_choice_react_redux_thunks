@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { trackingBuilding, addBuilding } from './store';
+import { fetchTodos, addTodo } from './store';
 
 class App extends Component {
     constructor() {
         super()
         this.state = {
-            input: ''
+            title: '',
+            content: ''
         }
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -33,76 +34,56 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.props.trackingBuilding();
+        this.props.loadTodos();
     }
 
     render() {
-        const { tracker } = this.props;
-        console.log(tracker)
+        const { todos } = this.props;
+        // console.log(todos)
         const { handleChange, handleSubmit, handleInputChange } = this;
-        // console.log(tracker)
-        const boro = (boroId) => {
-            switch (boroId) {
-                case "1":
-                    return 'MANHATTAN'
-                case "2":
-                    return 'BRONX'
-                case "3":
-                    return 'BROOKLYN'
-                case "4":
-                    return 'QUEENS'
-                case "5":
-                    return 'STATEN ISLAND'
-                default:
-                    return "MANHATTAN"
-            }
-        }
+
         return (
             <div>
                 <nav>
                     <div>
-                        <h1>NYC BUILDING</h1>
-                        <h1>VIOLATION TRACKER</h1>
+                        <h1>MY TODO</h1>
+                        <h1>APP</h1>
                     </div>
                     <div>
                         <label>
-                            SELECT BOROUGH:
+                            SELECT:
                             <select onChange={handleChange}>
                                 <option value='SHOW_ALL'>SHOW ALL</option>
-                                <option value="BRONX">BRONX</option>
-                                <option value="BROOKLYN">BROOKLYN</option>
-                                <option value="MANHATTAN">MANHATTAN</option>
-                                <option value="QUEENS">QUEENS</option>
-                                <option value="STATEN_ISLAND">STATEN ISLAND</option>
+                                <option value="BRONX">TODO</option>
+                                <option value="BROOKLYN">DONE</option>
                             </select>
                         </label>
                     </div>
                 </nav>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Title:
+                        <br />
+                        <input type='text' value={this.state.title} onChange={handleInputChange} />
+                    </label>
+                    <label>
+                        Content:
+                        <br />
+                        <textarea type='text' value={this.state.content} onChange={handleInputChange} />
+                    </label>
+                    <button type="submit">Add</button>
+                </form>
                 <main>
-                    <form onSubmit={handleSubmit}>
-                        <label>
-                            Enter Building Identifier:
-                            <br />
-                            <input type='text' value={this.state.input} onChange={handleInputChange} />
-                        </label>
-                        <button type="submit">Add Building</button>
-                    </form>
                     <div className="container">
-                        {tracker.map(buildings => {
+                        {todos.map(todo => {
                             return (
-                                {
-                                    buildings.map(building => {
-                                        <div className='building-card' key={building.id}>
-                                            return (
-                                            <h2>BUILDING </h2>
-                                            <p>{buildings.identifier}</p>
-                                            <h4>{building.violations.respondent_house_number} {building.violations.respondent_street}</h4>
-                                            <h4>{boro(building.violations.boro)}</h4>
-                                            <p>Total Violations = {building.violations.length}</p>
-                                            )
-                                        </div>
-                                    })
-                                }
+                                <div className='todo-card' key={todo.id}>
+                                    <h3>{todo.title}</h3>
+                                    <p>Content</p>
+                                    <p>{todo.content}</p>
+                                    <button>Edit</button>
+                                    <button>Delete</button>
+                                </div>
                             )
                         })}
                     </div>
@@ -118,11 +99,11 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
     return {
-        trackingBuilding: () => {
-            return dispatch(trackingBuilding())
+        loadTodos: () => {
+            return dispatch(fetchTodos())
         },
-        addBuilding: (id) => {
-            return dispatch(addBuilding(id))
+        addTodo: (todo) => {
+            return dispatch(addTodo(todo))
         }
     }
 }

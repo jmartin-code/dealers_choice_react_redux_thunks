@@ -1,9 +1,5 @@
 const express = require('express');
 const path = require('path');
-const data = require('./sampleData/data');
-
-console.log(data.length)
-
 const app = express();
 
 app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
@@ -60,7 +56,7 @@ const db = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:fullst
 //Models
 const Todo = db.define('todo', {
     title: STRING,
-    text: TEXT
+    content: TEXT
 });
 
 const syncAndSeed = async () => {
@@ -69,7 +65,7 @@ const syncAndSeed = async () => {
         await db.sync({ force: true })
         console.log('Connected to database');
 
-        await Todo.create({ title: 'testing', text: 'testing1' });
+        await Todo.create({ title: 'testing', content: 'testing1' });
     }
     catch (err) {
         console.log(err);
@@ -88,7 +84,3 @@ const runServer = async () => {
 }
 
 runServer();
-
-
-// 1037166
-// 1088591
