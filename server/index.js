@@ -19,19 +19,11 @@ app.get('/api/todos', async (req, res, next) => {
     }
 });
 
-// app.post('/api/buildings', async (req, res, next) => {
-//     const id = req.body.id;
-//     await Tracker.create({ buildingId: id });
-
-//     const building = await Building.findAll({
-//         where: {
-//             identifier: id
-//         },
-//         include: Violation
-//     });
-
-//     res.send(building)
-// })
+app.post('/api/todos', async (req, res, next) => {
+    const { title, content } = req.body.todo;
+    const addedTodo = await Todo.create({ title, content });
+    res.send(addedTodo)
+});
 
 // app.get('/api/buildings/:id', async (req, res, next) => {
 //     try {

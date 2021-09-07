@@ -13,7 +13,7 @@ const todoReducer = (state = [], action) => {
     }
 
     if (action.type === ADD_TODO) {
-        state = action.addtodo;
+        state = [...state, action.addtodo];
     }
 
     return state;

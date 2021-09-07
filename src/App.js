@@ -19,16 +19,14 @@ class App extends Component {
         const value = e.target.value;
         const name = e.target.name;
 
-        this.setState({
-            [name]: value
-        })
-
+        this.setState({ [name]: value })
+        console.log(this.state)
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        this.props.addBuilding(this.state.input);
-        console.log('added')
+        this.props.addTodo(this.state);
+        console.log('Todo Added')
     }
 
     componentDidMount() {
@@ -38,6 +36,10 @@ class App extends Component {
     render() {
         const { todos } = this.props;
         const { handleChange, handleSubmit } = this;
+
+        if (!todos) {
+            return (<p>...LOADING</p>)
+        }
 
         return (
             <div>
@@ -68,7 +70,7 @@ class App extends Component {
                         <br />
                         <textarea type='text' name='content' value={this.state.content} onChange={handleChange} />
                     </label>
-                    <button type="submit">Add</button>
+                    <button>Add</button>
                 </form>
                 <main>
                     <div className="container">
@@ -79,8 +81,11 @@ class App extends Component {
                                         <h3>{todo.title}</h3>
                                         <p>Content</p>
                                         <p>{todo.content}</p>
+                                        <label>
+                                            check{' '}
+                                            <input type="checkbox" />
+                                        </label>
                                     </div>
-                                    <input type="checkbox" />
                                     <button>Edit</button>
                                     <button>Delete</button>
                                 </div>
