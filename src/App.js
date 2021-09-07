@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { fetchTodos, addTodo, deleteTodo, updateTodo } from './store';
+import { fetchTodos, addTodo, deleteTodo, updateTodo, setView } from './store';
 
 class App extends Component {
     constructor() {
@@ -19,14 +19,19 @@ class App extends Component {
 
     }
 
-    handleChange(id, e) {
-        const name = e.target.name;
-        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
-        if (e.target.type === 'checkbox') {
+    handleChange(e, id) {
+        if (e.target.name === 'view') {
+            const view = e.target.value
+            // console.log(view)
+            this.props.setView(view)
+        }
+        else if (e.target.type === 'checkbox') {
+            const value = e.target.checked
             this.props.updateTodo(id, value);
         }
         else {
+            const value = e.target.value;
+            const name = e.target.name;
             this.setState({ [name]: value });
         }
     }
@@ -46,8 +51,15 @@ class App extends Component {
     }
 
     render() {
-        const { todos, deleteTodo } = this.props;
+        let { todos, deleteTodo, view } = this.props;
         const { handleChange, handleSubmit } = this;
+
+        if (view === 'DONE') {
+            todos = todos.filter(todo => todo.isCheck)
+        }
+        if (view === 'TODO') {
+            todos = todos.filter(todo => !todo.isCheck)
+        }
 
         if (!todos) {
             return (<p>...LOADING</p>)
@@ -63,10 +75,10 @@ class App extends Component {
                     <div>
                         <label>
                             SELECT VIEW:
-                            <select onChange={handleChange}>
-                                <option name="view" value='SHOW_ALL'>SHOW ALL</option>
-                                <option name="view" value="TODO">TODO</option>
-                                <option name="view" value="DONE">DONE</option>
+                            <select name="view" onChange={handleChange}>
+                                <option value='SHOW_ALL'>SHOW ALL</option>
+                                <option value="TODO">TODO</option>
+                                <option value="DONE">DONE</option>
                             </select>
                         </label>
                     </div>
@@ -95,7 +107,7 @@ class App extends Component {
                                         <p>{todo.content}</p>
                                         <label>
                                             Check{' '}
-                                            <input type="checkbox" checked={todo.isCheck} onChange={(e) => handleChange(todo.id, e)} />
+                                            <input type="checkbox" checked={todo.isCheck} onChange={(e) => handleChange(e, todo.id)} />
                                         </label>
                                     </div>
                                     {/* <button>Edit</button> */}
@@ -127,6 +139,9 @@ const mapDispatch = (dispatch) => {
         },
         updateTodo: (id, check) => {
             return dispatch(updateTodo(id, check))
+        },
+        setView: (view) => {
+            return dispatch(setView(view))
         }
     }
 }

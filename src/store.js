@@ -30,13 +30,14 @@ const todoReducer = (state = [], action) => {
     return state;
 }
 
-const viewReducer = (state = '', action) => {
+const viewReducer = (state = 'SHOW_ALL', action) => {
     if (action.type === SET_VIEW) {
         state = action.view;
     }
+    return state
 }
 
-const reducer = combineReducers({ todos: todoReducer })
+const reducer = combineReducers({ todos: todoReducer, view: viewReducer })
 
 export const fetchTodos = () => {
     return async (dispatch) => {
@@ -59,7 +60,6 @@ export const addTodo = (todo) => {
 export const updateTodo = (id, check) => {
     return async (dispatch) => {
         try {
-            // console.log('hello')
             const updatetodo = (await axios.put(`/api/todos/${id}`, { check })).data;
             dispatch({ type: UPDATE_TODO, updatetodo })
         }
@@ -78,6 +78,12 @@ export const deleteTodo = (id) => {
         catch (err) {
             console.log(err)
         }
+    }
+}
+
+export const setView = (view) => {
+    return (dispatch) => {
+        dispatch({ type: SET_VIEW, view })
     }
 }
 
