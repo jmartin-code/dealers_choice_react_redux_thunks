@@ -35,11 +35,19 @@ app.delete('/api/todos/:id', async (req, res, next) => {
     catch (err) {
         next(err)
     }
-})
+});
 
 //Database
 const { Sequelize, STRING, TEXT } = require('sequelize');
 const db = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:fullstack25@localhost/ecb_violations', { logging: false });
+const faker = require('faker');
+
+const fakeTodos = [];
+while (fakeTodos.length < 10) {
+    fakeTodos.push({ title: faker.lorem.word(), content: faker.lorem.sentence() })
+}
+
+console.log(fakerTodos)
 
 //Models
 const Todo = db.define('todo', {
@@ -53,7 +61,7 @@ const syncAndSeed = async () => {
         await db.sync({ force: true })
         console.log('Connected to database');
 
-        await Todo.create({ title: 'testing', content: 'testing1' });
+        await Promise.all(fakerTodos.map(todo => Todo.create(todo)))
     }
     catch (err) {
         console.log(err);

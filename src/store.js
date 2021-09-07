@@ -6,6 +6,7 @@ import axios from 'axios';
 const LOAD_TODO = 'LOAD_TODO';
 const ADD_TODO = 'ADD_TODO';
 const DELETE_TODO = 'DELETE_TODO';
+const SET_VIEW = 'SET_VIEW';
 
 //Reducers
 const todoReducer = (state = [], action) => {
@@ -22,6 +23,12 @@ const todoReducer = (state = [], action) => {
     }
 
     return state;
+}
+
+const viewReducer = (state = '', action) => {
+    if (action.type === SET_VIEW) {
+        
+    }
 }
 
 const reducer = combineReducers({ todos: todoReducer })

@@ -9,7 +9,8 @@ class App extends Component {
         this.state = {
             title: '',
             content: '',
-            view: ''
+            isCheck: false,
+            view: 'SHOW_ALL'
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -21,11 +22,11 @@ class App extends Component {
     }
 
     handleChange(e) {
-        const value = e.target.value;
         const name = e.target.name;
+        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
         this.setState({ [name]: value })
-        // console.log(this.state)
+        console.log(this.state)
     }
 
     handleSubmit(e) {
@@ -63,7 +64,7 @@ class App extends Component {
                             <select onChange={handleChange}>
                                 <option name="view" value='SHOW_ALL'>SHOW ALL</option>
                                 <option name="view" value="TODO">TODO</option>
-                                <option name="veiw" value="DONE">DONE</option>
+                                <option name="view" value="DONE">DONE</option>
                             </select>
                         </label>
                     </div>
@@ -91,8 +92,8 @@ class App extends Component {
                                         <p>Content</p>
                                         <p>{todo.content}</p>
                                         <label>
-                                            check{' '}
-                                            <input type="checkbox" />
+                                            Check{' '}
+                                            <input type="checkbox" name="isCheck" value={this.state.isCheck} onChange={handleChange} />
                                         </label>
                                     </div>
                                     <button>Edit</button>
