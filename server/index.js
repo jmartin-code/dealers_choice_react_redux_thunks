@@ -8,6 +8,7 @@ const app = express();
 
 app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
+app.use(express.json())
 app.get('/', (req, res, next) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
 
 
@@ -21,6 +22,20 @@ app.get('/api/buildings', async (req, res, next) => {
         next(err)
     }
 });
+
+app.post('/api/buildings', async (req, res, next) => {
+    const id = req.body.id;
+    await Tracker.create({ buildingId: id });
+
+    const building = await Building.findAll({
+        where: {
+            identifier: id
+        },
+        include: Violation
+    });
+
+    res.send(building)
+})
 
 app.get('/api/buildings/:id', async (req, res, next) => {
     try {
@@ -101,6 +116,7 @@ const syncAndSeed = async () => {
         console.log('Connected to database');
 
         await Tracker.create({ buildingId: "1037166" })
+        await Tracker.create({ buildingId: "1000864" })
 
         const buildingId = [...new Set(data.map(id => id['bin']))]; //Get unique building id from the violations data.
         await Promise.all(buildingId.map(id => Building.create({ identifier: id })));//Create all buildings using unique building id.

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { trackingBuilding } from './store';
+import { trackingBuilding, addBuilding } from './store';
 
 class App extends Component {
     constructor() {
@@ -9,18 +9,27 @@ class App extends Component {
         this.state = {
             input: ''
         }
+        this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    handleInputChange() {
-
+    handleInputChange(e) {
+        // console.log(e.target.value)
+        this.setState({
+            input: e.target.value
+        });
+        // console.log(this.state.input)
     }
 
     handleChange(e) {
-        console.log(e.target.value)
+        // console.log(e.target.value)
     }
 
     handleSubmit(e) {
         e.preventDefault();
+        this.props.addBuilding(this.state.input);
+        console.log('added')
     }
 
     componentDidMount() {
@@ -29,6 +38,8 @@ class App extends Component {
 
     render() {
         const { tracker } = this.props;
+        console.log(tracker)
+        const { handleChange, handleSubmit, handleInputChange } = this;
         // console.log(tracker)
         const boro = (boroId) => {
             switch (boroId) {
@@ -56,7 +67,7 @@ class App extends Component {
                     <div>
                         <label>
                             SELECT BOROUGH:
-                            <select onChange={this.handleChange}>
+                            <select onChange={handleChange}>
                                 <option value='SHOW_ALL'>SHOW ALL</option>
                                 <option value="BRONX">BRONX</option>
                                 <option value="BROOKLYN">BROOKLYN</option>
@@ -68,11 +79,11 @@ class App extends Component {
                     </div>
                 </nav>
                 <main>
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={handleSubmit}>
                         <label>
                             Enter Building Identifier:
                             <br />
-                            <input type='text' value={this.state.input} onChange={this.handleInputChange} />
+                            <input type='text' value={this.state.input} onChange={handleInputChange} />
                         </label>
                         <button type="submit">Add Building</button>
                     </form>
@@ -82,8 +93,8 @@ class App extends Component {
                                 <div className='building-card' key={building.id}>
                                     <h2>BUILDING </h2>
                                     <p>{building.identifier}</p>
-                                    <h4>{building.violations[0].respondent_house_number} {building.violations[0].respondent_street}</h4>
-                                    <h4>{boro(building.violations[0].boro)}</h4>
+                                    <h4>{building.violations.respondent_house_number} {building.violations.respondent_street}</h4>
+                                    <h4>{boro(building.violations.boro)}</h4>
                                     <p>Total Violations = {building.violations.length}</p>
                                 </div>
                             )
@@ -103,6 +114,9 @@ const mapDispatch = (dispatch) => {
     return {
         trackingBuilding: () => {
             return dispatch(trackingBuilding())
+        },
+        addBuilding: (id) => {
+            return dispatch(addBuilding(id))
         }
     }
 }

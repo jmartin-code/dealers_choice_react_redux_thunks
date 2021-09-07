@@ -4,12 +4,18 @@ import axios from 'axios';
 
 //Action Type
 const LOADTRACKING = 'LOAD_TRACKING';
+const ADDBUILDING = 'ADD_BUILDING';
 
 //Reducers
 const trackerReducre = (state = [], action) => {
     if (action.type === LOADTRACKING) {
         state = action.buildings;
     }
+
+    if (action.type === ADDBUILDING) {
+        state = action.addbuild;
+    }
+
     return state;
 }
 
@@ -24,8 +30,25 @@ export const trackingBuilding = () => {
         const response = await Promise.all(tracking.map(track => axios.get(`/api/buildings/${track.buildingId}`)))
         const buildings = response.map(building => building.data);
 
-        //dispatch buildings
-        dispatch({ type: LOADTRACKING, buildings: buildings[0] })
+        //Dispatch all buildings
+        buildings.forEach(building => dispatch({ type: LOADTRACKING, buildings: building }))
+    }
+}
+
+export const addBuilding = (id) => {
+    return async (dispatch) => {
+        try {
+            const addbuild = (await axios.post('/api/buildings', { id })).data;
+
+            // console.log(added)
+
+            //Dispatch add building
+            dispatch({ type: ADDBUILDING, addbuild })
+
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 }
 

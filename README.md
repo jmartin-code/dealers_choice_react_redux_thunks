@@ -1,4 +1,4 @@
-# WEB APP TITLE: NYC BUILDING VIOLATION TRACKER
+# WEB APP TITLE: TO DO APP
 
 ## React-Reux Application
 
@@ -10,4 +10,4 @@
 
 ## Sketch - Rev. 1
 
-![Sketch](Sketch-Rev.1.png)
+![Sketch]()
