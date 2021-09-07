@@ -44,3 +44,7 @@ form {
     text-align: center;
     line-height: 1.5rem;
 }
+
+button {
+    margin: .5rem;
+}

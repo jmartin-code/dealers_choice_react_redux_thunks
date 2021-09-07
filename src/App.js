@@ -8,23 +8,21 @@ class App extends Component {
         super()
         this.state = {
             title: '',
-            content: ''
+            content: '',
+            view: ''
         }
-        this.handleInputChange = this.handleInputChange.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    handleInputChange(e) {
-        // console.log(e.target.value)
-        this.setState({
-            input: e.target.value
-        });
-        // console.log(this.state.input)
-    }
-
     handleChange(e) {
-        // console.log(e.target.value)
+        const value = e.target.value;
+        const name = e.target.name;
+
+        this.setState({
+            [name]: value
+        })
+
     }
 
     handleSubmit(e) {
@@ -39,8 +37,7 @@ class App extends Component {
 
     render() {
         const { todos } = this.props;
-        // console.log(todos)
-        const { handleChange, handleSubmit, handleInputChange } = this;
+        const { handleChange, handleSubmit } = this;
 
         return (
             <div>
@@ -53,9 +50,9 @@ class App extends Component {
                         <label>
                             SELECT:
                             <select onChange={handleChange}>
-                                <option value='SHOW_ALL'>SHOW ALL</option>
-                                <option value="BRONX">TODO</option>
-                                <option value="BROOKLYN">DONE</option>
+                                <option name="view" value='SHOW_ALL'>SHOW ALL</option>
+                                <option name="view" value="TODO">TODO</option>
+                                <option name="veiw" value="DONE">DONE</option>
                             </select>
                         </label>
                     </div>
@@ -64,12 +61,12 @@ class App extends Component {
                     <label>
                         Title:
                         <br />
-                        <input type='text' value={this.state.title} onChange={handleInputChange} />
+                        <input type='text' name='title' value={this.state.title} onChange={handleChange} />
                     </label>
                     <label>
                         Content:
                         <br />
-                        <textarea type='text' value={this.state.content} onChange={handleInputChange} />
+                        <textarea type='text' name='content' value={this.state.content} onChange={handleChange} />
                     </label>
                     <button type="submit">Add</button>
                 </form>
@@ -78,9 +75,12 @@ class App extends Component {
                         {todos.map(todo => {
                             return (
                                 <div className='todo-card' key={todo.id}>
-                                    <h3>{todo.title}</h3>
-                                    <p>Content</p>
-                                    <p>{todo.content}</p>
+                                    <div>
+                                        <h3>{todo.title}</h3>
+                                        <p>Content</p>
+                                        <p>{todo.content}</p>
+                                    </div>
+                                    <input type="checkbox" />
                                     <button>Edit</button>
                                     <button>Delete</button>
                                 </div>
