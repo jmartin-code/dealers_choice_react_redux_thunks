@@ -24,6 +24,7 @@ form {
     justify-content: center;
     align-items: center;
     padding-bottom: .5rem;
+    text-align: center;
     border: 1px solid rgb(216, 216, 216);
     
 }
@@ -39,7 +40,7 @@ form {
 .todo-card{
     margin: 2rem;
     border: 1px solid rgb(216, 216, 216);
-    width: 10rem;
+    width: 20rem;
     text-align: center;
     line-height: 1.5rem;
 }

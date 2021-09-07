@@ -37,7 +37,6 @@ const viewReducer = (state = 'SHOW_ALL', action) => {
     return state
 }
 
-const reducer = combineReducers({ todos: todoReducer, view: viewReducer })
 
 export const fetchTodos = () => {
     return async (dispatch) => {
@@ -87,6 +86,8 @@ export const setView = (view) => {
     }
 }
 
+//Combining reducers and create store.
+const reducer = combineReducers({ todos: todoReducer, view: viewReducer })
 const store = createStore(reducer, applyMiddleware(thunk));
 
 export default store;

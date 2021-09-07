@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { fetchTodos, addTodo, deleteTodo, updateTodo, setView } from './store';
+//Components
+import From from './components/From';
+import Nav from './components/Nav';
+
+import { fetchTodos, deleteTodo, updateTodo } from './store';
 
 class App extends Component {
     constructor() {
         super()
-        this.state = {
-            title: '',
-            content: ''
-        }
         this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
     }
 
@@ -20,30 +19,9 @@ class App extends Component {
     }
 
     handleChange(e, id) {
-        if (e.target.name === 'view') {
-            const view = e.target.value
-            // console.log(view)
-            this.props.setView(view)
-        }
-        else if (e.target.type === 'checkbox') {
-            const value = e.target.checked
-            this.props.updateTodo(id, value);
-        }
-        else {
-            const value = e.target.value;
-            const name = e.target.name;
-            this.setState({ [name]: value });
-        }
-    }
+        const value = e.target.checked
+        this.props.updateTodo(id, value);
 
-    handleSubmit(e) {
-        e.preventDefault();
-        this.props.addTodo(this.state);
-        this.setState({
-            title: '',
-            content: ''
-        })
-        console.log('Todo Added')
     }
 
     componentDidMount() {
@@ -67,35 +45,8 @@ class App extends Component {
 
         return (
             <div>
-                <nav>
-                    <div>
-                        <h1>MY TODO</h1>
-                        <h1>APP</h1>
-                    </div>
-                    <div>
-                        <label>
-                            SELECT VIEW:
-                            <select name="view" onChange={handleChange}>
-                                <option value='SHOW_ALL'>SHOW ALL</option>
-                                <option value="TODO">TODO</option>
-                                <option value="DONE">DONE</option>
-                            </select>
-                        </label>
-                    </div>
-                </nav>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Title:
-                        <br />
-                        <input type='text' name='title' value={this.state.title} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Content:
-                        <br />
-                        <textarea type='text' name='content' value={this.state.content} onChange={handleChange} />
-                    </label>
-                    <button>Add</button>
-                </form>
+                <Nav />
+                <From />
                 <main>
                     <div className="container">
                         {todos.map(todo => {
@@ -131,17 +82,11 @@ const mapDispatch = (dispatch) => {
         loadTodos: () => {
             return dispatch(fetchTodos())
         },
-        addTodo: (todo) => {
-            return dispatch(addTodo(todo))
-        },
         deleteTodo: (id) => {
             return dispatch(deleteTodo(id))
         },
         updateTodo: (id, check) => {
             return dispatch(updateTodo(id, check))
-        },
-        setView: (view) => {
-            return dispatch(setView(view))
         }
     }
 }
