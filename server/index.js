@@ -22,7 +22,17 @@ app.get('/api/todos', async (req, res, next) => {
 app.post('/api/todos', async (req, res, next) => {
     const { title, content } = req.body.todo;
     const addedTodo = await Todo.create({ title, content });
-    res.status(204).send(addedTodo)
+    res.send(addedTodo)
+});
+
+app.put('/api/todos/:id', async (req, res, next) => {
+    // console.log('hello')
+    const { id } = req.params;
+    const updatetodo = await Todo.findByPk(id);
+
+    const { check } = req.body
+    await updatetodo.update({ isCheck: check })
+    res.send(updatetodo)
 });
 
 app.delete('/api/todos/:id', async (req, res, next) => {
@@ -30,7 +40,7 @@ app.delete('/api/todos/:id', async (req, res, next) => {
         const id = req.params.id;
         const todo = await Todo.findByPk(id)
         todo.destroy();
-        res.status(204).send(todo)
+        res.send(todo)
     }
     catch (err) {
         next(err)
@@ -38,21 +48,24 @@ app.delete('/api/todos/:id', async (req, res, next) => {
 });
 
 //Database
-const { Sequelize, STRING, TEXT } = require('sequelize');
+const { Sequelize, STRING, TEXT, BOOLEAN } = require('sequelize');
 const db = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:fullstack25@localhost/ecb_violations', { logging: false });
 const faker = require('faker');
 
-const fakeTodos = [];
-while (fakeTodos.length < 10) {
-    fakeTodos.push({ title: faker.lorem.word(), content: faker.lorem.sentence() })
+const fakerTodos = [];
+while (fakerTodos.length < 10) {
+    fakerTodos.push({ title: faker.lorem.word(), content: faker.lorem.sentence() })
 }
-
-console.log(fakerTodos)
 
 //Models
 const Todo = db.define('todo', {
     title: STRING,
-    content: TEXT
+    content: TEXT,
+    isCheck: {
+        type: BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
 });
 
 const syncAndSeed = async () => {

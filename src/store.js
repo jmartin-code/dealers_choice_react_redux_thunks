@@ -5,21 +5,26 @@ import axios from 'axios';
 //Action Type
 const LOAD_TODO = 'LOAD_TODO';
 const ADD_TODO = 'ADD_TODO';
+const UPDATE_TODO = 'UPDATE_TODO';
 const DELETE_TODO = 'DELETE_TODO';
 const SET_VIEW = 'SET_VIEW';
 
 //Reducers
 const todoReducer = (state = [], action) => {
     if (action.type === LOAD_TODO) {
-        state = action.todos;
+        state = action.todos.sort((a, b) => a.id - b.id);
     }
 
     if (action.type === ADD_TODO) {
-        state = [...state, action.addtodo];
+        state = [...state, action.addtodo].sort((a, b) => a.id - b.id);
+    }
+
+    if (action.type === UPDATE_TODO) {
+        state = [...state.filter(todo => todo.id !== action.updatetodo.id), action.updatetodo].sort((a, b) => a.id - b.id);
     }
 
     if (action.type === DELETE_TODO) {
-        state = state.filter(todo => todo.id !== action.deletedtodo.id)
+        state = state.filter(todo => todo.id !== action.deletedtodo.id).sort((a, b) => a.id - b.id);
     }
 
     return state;
@@ -27,7 +32,7 @@ const todoReducer = (state = [], action) => {
 
 const viewReducer = (state = '', action) => {
     if (action.type === SET_VIEW) {
-        
+        state = action.view;
     }
 }
 
@@ -45,6 +50,18 @@ export const addTodo = (todo) => {
         try {
             const addtodo = (await axios.post('/api/todos', { todo })).data;
             dispatch({ type: ADD_TODO, addtodo })
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+}
+export const updateTodo = (id, check) => {
+    return async (dispatch) => {
+        try {
+            // console.log('hello')
+            const updatetodo = (await axios.put(`/api/todos/${id}`, { check })).data;
+            dispatch({ type: UPDATE_TODO, updatetodo })
         }
         catch (err) {
             console.log(err)

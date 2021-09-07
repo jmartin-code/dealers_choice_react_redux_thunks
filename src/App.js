@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { fetchTodos, addTodo, deleteTodo } from './store';
+import { fetchTodos, addTodo, deleteTodo, updateTodo } from './store';
 
 class App extends Component {
     constructor() {
         super()
         this.state = {
             title: '',
-            content: '',
-            isCheck: false,
-            view: 'SHOW_ALL'
+            content: ''
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -21,12 +19,16 @@ class App extends Component {
 
     }
 
-    handleChange(e) {
+    handleChange(id, e) {
         const name = e.target.name;
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
-        this.setState({ [name]: value })
-        console.log(this.state)
+        if (e.target.type === 'checkbox') {
+            this.props.updateTodo(id, value);
+        }
+        else {
+            this.setState({ [name]: value });
+        }
     }
 
     handleSubmit(e) {
@@ -60,7 +62,7 @@ class App extends Component {
                     </div>
                     <div>
                         <label>
-                            SELECT:
+                            SELECT VIEW:
                             <select onChange={handleChange}>
                                 <option name="view" value='SHOW_ALL'>SHOW ALL</option>
                                 <option name="view" value="TODO">TODO</option>
@@ -93,10 +95,10 @@ class App extends Component {
                                         <p>{todo.content}</p>
                                         <label>
                                             Check{' '}
-                                            <input type="checkbox" name="isCheck" value={this.state.isCheck} onChange={handleChange} />
+                                            <input type="checkbox" checked={todo.isCheck} onChange={(e) => handleChange(todo.id, e)} />
                                         </label>
                                     </div>
-                                    <button>Edit</button>
+                                    {/* <button>Edit</button> */}
                                     <button onClick={() => deleteTodo(todo.id)}>Delete</button>
                                 </div>
                             )
@@ -122,6 +124,9 @@ const mapDispatch = (dispatch) => {
         },
         deleteTodo: (id) => {
             return dispatch(deleteTodo(id))
+        },
+        updateTodo: (id, check) => {
+            return dispatch(updateTodo(id, check))
         }
     }
 }
