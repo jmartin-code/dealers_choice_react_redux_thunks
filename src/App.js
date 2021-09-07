@@ -4,8 +4,23 @@ import { connect } from 'react-redux'
 import { trackingBuilding } from './store';
 
 class App extends Component {
+    constructor() {
+        super()
+        this.state = {
+            input: ''
+        }
+    }
+
+    handleInputChange() {
+
+    }
+
     handleChange(e) {
         console.log(e.target.value)
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
     }
 
     componentDidMount() {
@@ -53,6 +68,14 @@ class App extends Component {
                     </div>
                 </nav>
                 <main>
+                    <form onSubmit={this.handleSubmit}>
+                        <label>
+                            Enter Building Identifier:
+                            <br />
+                            <input type='text' value={this.state.input} onChange={this.handleInputChange} />
+                        </label>
+                        <button type="submit">Add Building</button>
+                    </form>
                     <div className="container">
                         {tracker.map(building => {
                             return (
