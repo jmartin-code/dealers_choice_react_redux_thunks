@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { fetchTodos, addTodo } from './store';
+import { fetchTodos, addTodo, deleteTodo } from './store';
 
 class App extends Component {
     constructor() {
@@ -13,6 +13,11 @@ class App extends Component {
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
+    }
+
+    handleDelete() {
+
     }
 
     handleChange(e) {
@@ -20,12 +25,16 @@ class App extends Component {
         const name = e.target.name;
 
         this.setState({ [name]: value })
-        console.log(this.state)
+        // console.log(this.state)
     }
 
     handleSubmit(e) {
         e.preventDefault();
         this.props.addTodo(this.state);
+        this.setState({
+            title: '',
+            content: ''
+        })
         console.log('Todo Added')
     }
 
@@ -34,7 +43,7 @@ class App extends Component {
     }
 
     render() {
-        const { todos } = this.props;
+        const { todos, deleteTodo } = this.props;
         const { handleChange, handleSubmit } = this;
 
         if (!todos) {
@@ -87,7 +96,7 @@ class App extends Component {
                                         </label>
                                     </div>
                                     <button>Edit</button>
-                                    <button>Delete</button>
+                                    <button onClick={() => deleteTodo(todo.id)}>Delete</button>
                                 </div>
                             )
                         })}
@@ -109,6 +118,9 @@ const mapDispatch = (dispatch) => {
         },
         addTodo: (todo) => {
             return dispatch(addTodo(todo))
+        },
+        deleteTodo: (id) => {
+            return dispatch(deleteTodo(id))
         }
     }
 }

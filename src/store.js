@@ -5,6 +5,7 @@ import axios from 'axios';
 //Action Type
 const LOAD_TODO = 'LOAD_TODO';
 const ADD_TODO = 'ADD_TODO';
+const DELETE_TODO = 'DELETE_TODO';
 
 //Reducers
 const todoReducer = (state = [], action) => {
@@ -14,6 +15,10 @@ const todoReducer = (state = [], action) => {
 
     if (action.type === ADD_TODO) {
         state = [...state, action.addtodo];
+    }
+
+    if (action.type === DELETE_TODO) {
+        state = state.filter(todo => todo.id !== action.deletedtodo.id)
     }
 
     return state;
@@ -33,6 +38,18 @@ export const addTodo = (todo) => {
         try {
             const addtodo = (await axios.post('/api/todos', { todo })).data;
             dispatch({ type: ADD_TODO, addtodo })
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+}
+
+export const deleteTodo = (id) => {
+    return async (dispatch) => {
+        try {
+            const deletedtodo = (await axios.delete(`/api/todos/${id}`)).data;
+            dispatch({ type: DELETE_TODO, deletedtodo })
         }
         catch (err) {
             console.log(err)

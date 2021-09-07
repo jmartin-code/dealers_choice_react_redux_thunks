@@ -22,24 +22,20 @@ app.get('/api/todos', async (req, res, next) => {
 app.post('/api/todos', async (req, res, next) => {
     const { title, content } = req.body.todo;
     const addedTodo = await Todo.create({ title, content });
-    res.send(addedTodo)
+    res.status(204).send(addedTodo)
 });
 
-// app.get('/api/buildings/:id', async (req, res, next) => {
-//     try {
-//         const id = req.params.id;
-//         const building = await Building.findAll({
-//             where: {
-//                 identifier: id
-//             },
-//             include: Violation
-//         })
-//         res.send(building)
-//     }
-//     catch (err) {
-//         next(err)
-//     }
-// })
+app.delete('/api/todos/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const todo = await Todo.findByPk(id)
+        todo.destroy();
+        res.status(204).send(todo)
+    }
+    catch (err) {
+        next(err)
+    }
+})
 
 //Database
 const { Sequelize, STRING, TEXT } = require('sequelize');
