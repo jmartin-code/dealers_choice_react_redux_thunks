@@ -11,16 +11,34 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 app.get('/', (req, res, next) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
 
 
-// app.get('/api/buildings', async (req, res, next) => {
-//     res.send(await Building.findAll(
-//         { include: Violation }
-//     ))
-// });
+//Routes
 app.get('/api/buildings', async (req, res, next) => {
-    res.send(await Tracker.findAll())
+    try {
+        const tracking = await Tracker.findAll();
+        res.send(tracking);
+    }
+    catch (err) {
+        next(err)
+    }
 });
 
+app.get('/api/buildings/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const building = await Building.findAll({
+            where: {
+                identifier: id
+            },
+            include: Violation
+        })
+        res.send(building)
+    }
+    catch (err) {
+        next(err)
+    }
+})
 
+//Database
 const { Sequelize, STRING } = require('sequelize');
 const db = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:fullstack25@localhost/ecb_violations', { logging: false });
 

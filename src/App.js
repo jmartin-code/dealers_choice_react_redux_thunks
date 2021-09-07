@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { loadBuilding } from './store';
-import store from './store'
+import { trackingBuilding } from './store';
 
 class App extends Component {
     handleChange(e) {
@@ -10,13 +9,28 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.props.loadBuilding();
+        this.props.trackingBuilding();
     }
 
     render() {
-        // console.log(this.props)
         const { tracker } = this.props;
-        console.log(tracker)
+        // console.log(tracker)
+        const boro = (boroId) => {
+            switch (boroId) {
+                case "1":
+                    return 'MANHATTAN'
+                case "2":
+                    return 'BRONX'
+                case "3":
+                    return 'BROOKLYN'
+                case "4":
+                    return 'QUEENS'
+                case "5":
+                    return 'STATEN ISLAND'
+                default:
+                    return "MANHATTAN"
+            }
+        }
         return (
             <div>
                 <nav>
@@ -38,16 +52,22 @@ class App extends Component {
                         </label>
                     </div>
                 </nav>
-
                 <main>
                     <div className="container">
-                        <div className='building-card'>
-                            <h1>hello</h1>
-                            <h1>{tracker.length}</h1>
-                        </div>
+                        {tracker.map(building => {
+                            return (
+                                <div className='building-card' key={building.id}>
+                                    <h2>BUILDING </h2>
+                                    <p>{building.identifier}</p>
+                                    <h4>{building.violations[0].respondent_house_number} {building.violations[0].respondent_street}</h4>
+                                    <h4>{boro(building.violations[0].boro)}</h4>
+                                    <p>Total Violations = {building.violations.length}</p>
+                                </div>
+                            )
+                        })}
                     </div>
-                </main>
-            </div>
+                </main >
+            </div >
         )
     }
 }
@@ -58,8 +78,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
     return {
-        loadBuilding: () => {
-            return dispatch(loadBuilding())
+        trackingBuilding: () => {
+            return dispatch(trackingBuilding())
         }
     }
 }

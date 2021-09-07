@@ -16,3 +16,20 @@ nav {
     height: 5rem;
     border: 1px solid rgb(216, 216, 216);
 }
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    
+}
+
+.building-card{
+    margin: 2rem;
+    border: 1px solid rgb(216, 216, 216);
+    height: 10rem;
+    width: 10rem;
+    text-align: center;
+    line-height: 1.5rem;
+}
